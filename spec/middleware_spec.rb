@@ -17,39 +17,41 @@ describe Rack::Pack::Middleware do
   context 'with default settings' do
     it 'should pack javascripts' do
       within_construct do |c|
-        c.file 'javascripts/file-1.js', '1'
-        c.file 'javascripts/file-2.js', '2'
+        c.file 'vendor/javascripts/file-1.js', '1'
+        c.file 'javascripts/file-2.js',        '2'
+        c.file 'javascripts/file-3.js',        '3'
         
         @app = build_app
         @app.call(request)
-        File.read('public/javascripts/application.js').should == '12'
+        File.read('public/javascripts/application.js').should == '123'
       end
     end
     
     it 'should pack stylesheets' do
       within_construct do |c|
-        c.file 'stylesheets/file-1.css', '1'
+        c.file 'vendor/css/file-1.css',  '1'
         c.file 'stylesheets/file-2.css', '2'
+        c.file 'stylesheets/file-3.css', '3'
         
         @app = build_app
         @app.call(request)
-        File.read('public/stylesheets/application.css').should == '12'
+        File.read('public/stylesheets/application.css').should == '123'
       end
     end
     
     context 'on next request' do
       context 'with updates' do
-        it 'should re-pack the files' do
+        it 'should re-pack the package' do
           within_construct do |c|
-            c.file 'stylesheets/file-1.css', '1'
-            c.file 'stylesheets/file-2.css', '2'
+            c.file 'app/stylesheets/file-1.css', '1'
+            c.file 'app/stylesheets/file-2.css', '2'
             
             @app = build_app
             @app.call(request)
             File.read('public/stylesheets/application.css').should == '12'
             
             sleep 1
-            c.file 'stylesheets/file-2.css', '3'
+            c.file 'app/stylesheets/file-2.css', '3'
             @app.call(request)
             File.read('public/stylesheets/application.css').should == '13'
           end
@@ -57,10 +59,10 @@ describe Rack::Pack::Middleware do
       end
     
       context 'without updates' do
-        it 'should not re-pack the files' do
+        it 'should not re-pack the package' do
           within_construct do |c|
-            c.file 'stylesheets/file-1.css', '1'
-            c.file 'stylesheets/file-2.css', '2'
+            c.file 'app/css/file-1.css', '1'
+            c.file 'app/css/file-2.css', '2'
             
             @app = build_app
             @app.call(request)
@@ -73,6 +75,19 @@ describe Rack::Pack::Middleware do
             File.mtime('public/stylesheets/application.css').should == original_mtime
           end
         end
+      end
+    end
+  end
+  
+  context 'with some custom packages' do
+    it 'should pack the files' do
+      within_construct do |c|
+        c.file 'vendor/javascripts/file-1.js', '1'
+        c.file 'app/javascripts/file-2.js',    '2'
+        
+        @app = build_app 'main.js' => %w(vendor/javascripts/file-1.js app/javascripts/file-2.js)
+        @app.call(request)
+        File.read('public/main.js').should == '12'
       end
     end
   end

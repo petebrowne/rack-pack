@@ -2,7 +2,7 @@ require 'pathname'
 
 module Rack
   module Pack
-    class Packer
+    class Package
       attr_reader :to_file, :from_files, :options
       
       def initialize(to_file, from_files, options = {})

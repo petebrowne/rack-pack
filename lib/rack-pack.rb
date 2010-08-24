@@ -2,7 +2,7 @@ require 'rack'
 
 module Rack
   module Pack
-    autoload :Packer,     'rack-pack/packer'
+    autoload :Package,    'rack-pack/package'
     autoload :Middleware, 'rack-pack/middleware'
     autoload :Version,    'rack-pack/version'
     
