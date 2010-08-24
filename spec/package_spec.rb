@@ -5,25 +5,31 @@ describe Rack::Pack::Package do
     double(:file, :mtime => modified_at, :exist? => true, :is_a? => true)
   end
   
-  describe '.new' do
-    context 'when given a string for the first argument' do
+  describe '#file' do
+    context 'when initialized with a string' do
       it 'should convert it to a pathname' do
         package = Rack::Pack::Package.new('hello', [])
-        package.to_file.should be_a(Pathname)
+        package.file.should == Pathname.new('hello')
       end
     end
-    
-    context 'when given an array of strings for the second argument' do
+  
+  describe '#source_files'
+    context 'when initialized with an array of strings' do
       it 'should convert them to pathnames' do
         package = Rack::Pack::Package.new('', %w(file-1 file-2))
-        package.from_files.should =~ [ Pathname.new('file-1'), Pathname.new('file-2') ]
+        package.source_files.should =~ [ Pathname.new('file-1'), Pathname.new('file-2') ]
       end
     end
-    
-    context 'when given a string for the second argument' do
+  
+    context 'when initialized with a string' do
       it 'should treat it as a Dir glob' do
-        Pathname.should_receive(:glob).with('dir/*.js').and_return([])
-        Rack::Pack::Package.new('', 'dir/*.js')
+        within_construct do |c|
+          c.file 'dir/file-1.js'
+          c.file 'dir/file-2.js'
+          
+          package = Rack::Pack::Package.new('', 'dir/*.js')
+          package.source_files.should =~ [ Pathname.new('dir/file-1.js'), Pathname.new('dir/file-2.js') ]
+        end
       end
     end
   end
@@ -32,14 +38,13 @@ describe Rack::Pack::Package do
     context 'if the packed file is current' do
       subject do
         now = Time.now
-        Rack::Pack::Package.new(
+        package = Rack::Pack::Package.new('', [
           file_double(now),
-          [
-            file_double(now),
-            file_double(1.week.ago),
-            file_double(2.weeks.ago)
-          ]
-        )
+          file_double(1.week.ago),
+          file_double(2.weeks.ago)
+        ])
+        package.stub(:file => file_double(now))
+        package
       end
       
       it { should_not be_stale }
@@ -47,14 +52,13 @@ describe Rack::Pack::Package do
     
     context 'if the packed file is old' do
       subject do
-        Rack::Pack::Package.new(
+        package = Rack::Pack::Package.new('', [
+          file_double(Time.now),
           file_double(1.week.ago),
-          [
-            file_double(Time.now),
-            file_double(1.week.ago),
-            file_double(2.weeks.ago)
-          ]
-        )
+          file_double(2.weeks.ago)
+        ])
+        package.stub(:file => file_double(1.week.ago))
+        package
       end
       
       it { should be_stale }
@@ -73,6 +77,23 @@ describe Rack::Pack::Package do
       end
       
       it { should be_stale }
+    end
+    
+    context 'when given a glob string' do
+      it 'should check for new files' do
+        within_construct do |c|
+          c.file 'directory/file-1'
+          
+          package = Rack::Pack::Package.new(
+            file_double(2.weeks.ago),
+            'directory/**/*'
+          )
+          package.stale?
+          
+          c.file 'directory/file-2'
+          package.should be_stale
+        end
+      end
     end
   end
   

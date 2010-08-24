@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
-$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
-require 'rack-pack/version'
+require File.expand_path('../lib/rack/pack/version', __FILE__)
 require 'bundler'
 
 Gem::Specification.new do |s|
@@ -15,10 +14,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'rack-pack'
-  
+
   s.add_bundler_dependencies
 
   s.files        = `git ls-files`.split("\n")
-  s.executables  = `git ls-files`.split("\n").select{ |f| f =~ /^bin/ }
+  s.executables  = `git ls-files`.split("\n").map{ |f| f =~ /^bin\/(.*)/ ? $1 : nil }.compact
   s.require_path = 'lib'
 end
