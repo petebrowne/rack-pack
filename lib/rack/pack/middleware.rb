@@ -6,13 +6,7 @@ module Rack
         :always_update => false
       }.freeze
       
-      class << self
-        @updated = false
-        attr_accessor :updated
-      end
-      
       def initialize(app, options = {})
-        puts options.inspect
         @app      = app
         @packages = {}
         @options  = DEFAULT_OPTIONS.dup
@@ -45,7 +39,7 @@ module Rack
         @packages.each_value do |package|
           package.update if package.stale?
         end
-        self.class.updated = true
+        @updated = true
       end
       
       def skip_update?(env)
@@ -59,7 +53,7 @@ module Rack
           env['RACK_ENV']
         end.to_s == 'production'
         
-        production && self.class.updated
+        production && @updated
       end
     end
   end

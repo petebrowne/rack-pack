@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Rack::Pack::Middleware do
   def build_app(*args)
-    Rack::Builder.new do
+    Rack::Builder.app do
       use Rack::Lint
       use Rack::Pack, *args
       run lambda { |env| [ 200, { 'Content-Type' => 'text/html' }, [ 'Hello World!' ] ] }
@@ -13,10 +13,6 @@ describe Rack::Pack::Middleware do
     Rack::MockRequest.env_for(url)
   end
   alias_method :request, :request_for
-  
-  before do
-    Rack::Pack::Middleware.updated = false
-  end
   
   context 'with default settings' do
     it 'should pack javascripts' do
