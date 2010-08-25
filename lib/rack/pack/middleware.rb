@@ -7,9 +7,18 @@ module Rack
       }.freeze
       
       def initialize(app, options = {})
-        @app      = app
-        @packages = {}
-        @options  = DEFAULT_OPTIONS.dup
+        @app         = app
+        @packages    = {}
+        @options     = DEFAULT_OPTIONS.dup
+        @environment = if defined?(RAILS_ENV)
+          RAILS_ENV # Rails 2
+        elsif defined?(Rails) && defined?(Rails.env)
+          Rails.env # Rails 3
+        elsif defined?(app.settings) && defined?(app.settings.environment)
+          app.settings.environment # Sinatra
+        else
+          :development
+        end
         
         @options.each_key do |key|
           @options[key] = options.delete(key) if options.key?(key)
@@ -45,16 +54,7 @@ module Rack
       
       def skip_update?(env)
         return false if @options[:always_update]
-        
-        production = if defined?(RAILS_ENV)
-          RAILS_ENV
-        elsif defined?(Rails) && defined?(Rails.env)
-          Rails.env
-        else
-          env['RACK_ENV']
-        end.to_s == 'production'
-        
-        production && @updated
+        (env['RACK_ENV'] || @environment).to_s == 'production' && @updated
       end
     end
   end
