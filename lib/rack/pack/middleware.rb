@@ -30,7 +30,8 @@ module Rack
       
       def add_package(output_file, source_files)
         public_output_file     = ::File.join(@options[:public_dir], output_file.to_s)
-        @packages[output_file] = Rack::Pack::Package.new(public_output_file, source_files)
+        package_class          = Rack::Pack::Package[output_file]
+        @packages[output_file] = package_class.new(public_output_file, source_files)
       end
       
       protected

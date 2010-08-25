@@ -1,8 +1,43 @@
 require 'spec_helper'
 
 describe Rack::Pack::Package do
+  class MockPackage
+    attr_accessor :output_file, :source_files
+    def initialize(output_file, source_files)
+      @output_file  = output_file
+      @source_files = source_files
+    end
+  end
+  
   def file_double(modified_at)
     double(:file, :mtime => modified_at, :exist? => true, :is_a? => true)
+  end
+  
+  describe '.register' do
+    it 'will store the package class for the given extension' do
+      Rack::Pack::Package.register :mock, MockPackage
+      Rack::Pack::Package.mappings['mock'].should == MockPackage
+    end
+  end
+  
+  describe '.mappings' do
+    it 'should by default have a Javascript mapping' do
+      Rack::Pack::Package.mappings['js'].should == Rack::Pack::Packages::Javascript
+    end
+    
+    it 'should by default have a Stylesheet mapping' do
+      Rack::Pack::Package.mappings['css'].should == Rack::Pack::Packages::Stylesheet
+    end
+  end
+  
+  describe '.[]' do
+    it 'should find the correct package class for the given file' do
+      Rack::Pack::Package['some/javascript.js'].should == Rack::Pack::Packages::Javascript
+    end
+    
+    it 'should default to the base Package' do
+      Rack::Pack::Package['missing.ext'].should == Rack::Pack::Package
+    end
   end
   
   describe '#file' do

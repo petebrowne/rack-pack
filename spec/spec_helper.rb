@@ -4,7 +4,7 @@ $:.unshift(lib) unless $:.include?(lib)
 require 'rubygems'
 require 'bundler'
 Bundler.require(:default, :development)
-require 'rack-pack'
+require 'rack/pack'
 
 # To get 2.weeks.ago syntax...
 require 'active_support/core_ext/time/acts_like'

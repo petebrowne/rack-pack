@@ -3,6 +3,22 @@ require 'pathname'
 module Rack
   module Pack
     class Package
+      class << self
+        def mappings
+          @package_mappings ||= {}
+        end
+        
+        def register(ext, package_class)
+          ext = ext.to_s.sub(/^\./, '').downcase
+          mappings[ext] = package_class
+        end
+        
+        def [](file)
+          ext = ::File.extname(file.to_s).sub(/^\./, '').downcase
+          mappings[ext] || Rack::Pack::Package
+        end
+      end
+      
       attr_reader :file
       
       def initialize(output_file, source_files)
