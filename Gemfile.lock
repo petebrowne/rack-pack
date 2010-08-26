@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    rack-pack (0.1.0)
+      rack (~> 1.2.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -26,5 +32,6 @@ DEPENDENCIES
   jsmin (~> 1.0.1)
   packr (~> 3.1.0)
   rack (~> 1.2.1)
+  rack-pack!
   rspec (~> 2.0.0.beta.20)
   test-construct (~> 1.2.0)
