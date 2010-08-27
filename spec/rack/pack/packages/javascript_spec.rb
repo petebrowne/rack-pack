@@ -44,9 +44,24 @@ describe Rack::Pack::Packages::Javascript do
           within_construct do |c|
             c.file 'input.js', '1'
             
-            compressor = double(:js_compressor)
-            compressor.should_receive(:compile).with('1').and_return('1')
+            compressor = double(:yui_compressor)
+            compressor.should_receive(:compress).with('1').and_return('1')
             YUI::JavaScriptCompressor.should_receive(:new).with(:munge => true).and_return(compressor)
+            Rack::Pack::Packages::Javascript.new('output.js', 'input.js').compile
+          end
+        end
+      end
+    end
+    
+    context 'when closure-compiler is required' do
+      it 'should compress using Closure::Compiler' do
+        reveal_const :Closure do
+          within_construct do |c|
+            c.file 'input.js', '1'
+            
+            compressor = double(:closure_compiler)
+            compressor.should_receive(:compile).with('1').and_return('1')
+            Closure::Compiler.should_receive(:new).with({}).and_return(compressor)
             Rack::Pack::Packages::Javascript.new('output.js', 'input.js').compile
           end
         end
