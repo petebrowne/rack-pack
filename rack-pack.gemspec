@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'packr',            '~> 3.1.0'
   s.add_development_dependency 'yui-compressor',   '~> 0.9.1'
   s.add_development_dependency 'closure-compiler', '~> 0.3.2'
+  s.add_development_dependency 'rainpress',        '~> 1.0.0'
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{ |f| f =~ /^bin\/(.*)/ ? $1 : nil }.compact

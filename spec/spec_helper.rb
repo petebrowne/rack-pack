@@ -12,10 +12,11 @@ require 'jsmin'
 require 'packr'
 require 'yui/compressor'
 require 'closure-compiler'
+require 'rainpress'
 require 'rack/pack'
 
 $hidden_consts = {}
-[ :JSMin, :Packr, :YUI, :Closure ].each do |const|
+[ :JSMin, :Packr, :YUI, :Closure, :Rainpress ].each do |const|
   $hidden_consts[const] = Object.const_get(const)
   Object.send :remove_const, const
 end

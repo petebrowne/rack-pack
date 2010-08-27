@@ -31,6 +31,19 @@ describe Rack::Pack::Stylesheet do
           end
         end
       end
+      
+      context 'when rainpress is required' do
+        it 'should compress using Rainpress' do
+          reveal_const :Rainpress do
+            within_construct do |c|
+              c.file 'input.css', '1'
+              
+              Rainpress.should_receive(:compress).with('1', {}).and_return('')
+              Rack::Pack::Stylesheet.new('output.css', 'input.css').compile
+            end
+          end
+        end
+      end
     end
   end
 end

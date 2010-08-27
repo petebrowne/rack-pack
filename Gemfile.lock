@@ -15,6 +15,7 @@ GEM
     packr (3.1.0)
       oyster
     rack (1.2.1)
+    rainpress (1.0)
     rspec (2.0.0.beta.20)
       rspec-core (= 2.0.0.beta.20)
       rspec-expectations (= 2.0.0.beta.20)
@@ -36,6 +37,7 @@ DEPENDENCIES
   packr (~> 3.1.0)
   rack (~> 1.2.1)
   rack-pack!
+  rainpress (~> 1.0.0)
   rspec (~> 2.0.0.beta.20)
   test-construct (~> 1.2.0)
   yui-compressor (~> 0.9.1)
