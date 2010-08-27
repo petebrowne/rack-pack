@@ -1,7 +1,7 @@
 require 'pathname'
 
 module Rack
-  module Pack
+  class Pack
     class Package
       class << self
         def mappings
@@ -15,7 +15,7 @@ module Rack
         
         def [](file)
           ext = ::File.extname(file.to_s).sub(/^\./, '').downcase
-          mappings[ext] || Rack::Pack::Package
+          mappings[ext] || self
         end
       end
       

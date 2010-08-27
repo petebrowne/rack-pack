@@ -22,17 +22,17 @@ describe Rack::Pack::Package do
   
   describe '.mappings' do
     it 'should by default have a Javascript mapping' do
-      Rack::Pack::Package.mappings['js'].should == Rack::Pack::Packages::Javascript
+      Rack::Pack::Package.mappings['js'].should == Rack::Pack::Javascript
     end
     
     it 'should by default have a Stylesheet mapping' do
-      Rack::Pack::Package.mappings['css'].should == Rack::Pack::Packages::Stylesheet
+      Rack::Pack::Package.mappings['css'].should == Rack::Pack::Stylesheet
     end
   end
   
   describe '.[]' do
     it 'should find the correct package class for the given file' do
-      Rack::Pack::Package['some/javascript.js'].should == Rack::Pack::Packages::Javascript
+      Rack::Pack::Package['some/javascript.js'].should == Rack::Pack::Javascript
     end
     
     it 'should default to the base Package' do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rack::Pack::Middleware do
+describe Rack::Pack do
   def build_app(*args)
     Rack::Builder.app do
       use Rack::Lint
@@ -133,7 +133,7 @@ describe Rack::Pack::Middleware do
   
   context 'with javascript compression options' do
     it 'should pass the options to the javascript compressor' do
-      reveal_const :Packr  do
+      reveal_const :Packr do
         within_construct do |c|
           c.file 'app/javascripts/file.js', '1'
           
