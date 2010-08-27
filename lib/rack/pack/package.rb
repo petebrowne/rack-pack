@@ -38,7 +38,13 @@ module Rack
       end
       
       def compile
-        source_files.map(&:read).join
+        compiled = source_files.map(&:read).join
+        compiled = compress(compiled) if compress?
+        compiled.strip
+      end
+      
+      def compress(source)
+        source
       end
       
       def stale?
