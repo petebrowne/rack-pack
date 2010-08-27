@@ -39,6 +39,18 @@ describe Rack::Pack do
       end
     end
     
+    it 'should not compress the packages' do
+      reveal_const :JSMin do
+        within_construct do |c|
+          c.file 'app/javascripts/file.js', '1'
+          
+          JSMin.should_not_receive(:minify)
+          @app = build_app
+          @app.call(request)
+        end
+      end
+    end
+    
     context 'on next request' do
       context 'with updates' do
         it 'should re-pack the package' do
@@ -129,17 +141,17 @@ describe Rack::Pack do
         end
       end
     end
-  end
   
-  context 'with javascript compression options' do
-    it 'should pass the options to the javascript compressor' do
-      reveal_const :Packr do
-        within_construct do |c|
-          c.file 'app/javascripts/file.js', '1'
-          
-          Packr.should_receive(:pack).with('1', :shrink_vars => false).and_return('1')
-          @app = build_app :js_compression => { :shrink_vars => false }
-          @app.call(request)
+    context 'with javascript compression options' do
+      it 'should pass the options to the javascript compressor' do
+        reveal_const :Packr do
+          within_construct do |c|
+            c.file 'app/javascripts/file.js', '1'
+            
+            Packr.should_receive(:pack).with('1', :shrink_vars => false).and_return('1')
+            @app = build_app :js_compression => { :shrink_vars => false }
+            @app.call(request)
+          end
         end
       end
     end
