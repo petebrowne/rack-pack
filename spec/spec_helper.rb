@@ -6,6 +6,7 @@ require 'rspec'
 require 'construct'
 require 'jsmin'
 require 'packr'
+require 'yui/compressor'
 # To get 2.weeks.ago syntax...
 require 'active_support/core_ext/time/acts_like'
 require 'active_support/core_ext/time/calculations'
@@ -13,7 +14,7 @@ require 'active_support/core_ext/numeric/time'
 require 'rack/pack'
 
 $hidden_consts = {}
-[ :JSMin, :Packr ].each do |const|
+[ :JSMin, :Packr, :YUI ].each do |const|
   $hidden_consts[const] = Object.const_get(const)
   Object.send :remove_const, const
 end

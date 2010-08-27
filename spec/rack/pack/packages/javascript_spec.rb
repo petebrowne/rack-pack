@@ -37,5 +37,20 @@ describe Rack::Pack::Packages::Javascript do
         end
       end
     end
+    
+    context 'when yui/compressor is required' do
+      it 'should compress using YUI::JavaScriptCompressor' do
+        reveal_const :YUI do
+          within_construct do |c|
+            c.file 'input.js', '1'
+            
+            compressor = double(:js_compressor)
+            compressor.should_receive(:compile).with('1').and_return('1')
+            YUI::JavaScriptCompressor.should_receive(:new).with(:munge => true).and_return(compressor)
+            Rack::Pack::Packages::Javascript.new('output.js', 'input.js').compile
+          end
+        end
+      end
+    end
   end
 end

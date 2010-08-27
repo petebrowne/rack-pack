@@ -9,6 +9,9 @@ module Rack
           elsif defined?(Packr)
             options = compression_options :shrink_vars => true
             Packr.pack(compiled, options).strip
+          elsif defined?(YUI) and defined?(YUI::JavaScriptCompressor)
+            options = compression_options :munge => true
+            YUI::JavaScriptCompressor.new(options).compile(compiled).strip
           else
             compiled.strip
           end

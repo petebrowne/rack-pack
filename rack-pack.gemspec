@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'test-construct', '~> 1.2.0'
   s.add_development_dependency 'jsmin',          '~> 1.0.1'
   s.add_development_dependency 'packr',          '~> 3.1.0'
+  s.add_development_dependency 'yui-compressor', '~> 0.9.1'
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{ |f| f =~ /^bin\/(.*)/ ? $1 : nil }.compact
