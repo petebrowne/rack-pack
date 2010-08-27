@@ -2,14 +2,20 @@ module Rack
   module Pack
     class Middleware
       DEFAULT_OPTIONS = {
-        :public_dir    => 'public',
-        :always_update => false
+        :public_dir     => 'public',
+        :always_update  => false,
+        :js_compression => {}
       }.freeze
       
+      class << self
+        attr_accessor :options
+      end
+      
       def initialize(app, options = {})
+        self.class.options = DEFAULT_OPTIONS.dup
+        
         @app         = app
         @packages    = {}
-        @options     = DEFAULT_OPTIONS.dup
         @environment = if defined?(RAILS_ENV)
           RAILS_ENV # Rails 2
         elsif defined?(Rails) && defined?(Rails.env)
@@ -20,8 +26,8 @@ module Rack
           :development
         end
         
-        @options.each_key do |key|
-          @options[key] = options.delete(key) if options.key?(key)
+        self.class.options.each_key do |key|
+          self.class.options[key] = options.delete(key) if options.key?(key)
         end
         
         add_package 'javascripts/application.js',  '{vendor,app,.}/javascripts/*.js'
@@ -38,7 +44,7 @@ module Rack
       end
       
       def add_package(output_file, source_files)
-        public_output_file     = ::File.join(@options[:public_dir], output_file.to_s)
+        public_output_file     = ::File.join(self.class.options[:public_dir], output_file.to_s)
         package_class          = Rack::Pack::Package[output_file]
         @packages[output_file] = package_class.new(public_output_file, source_files)
       end
@@ -53,7 +59,7 @@ module Rack
       end
       
       def skip_update?(env)
-        return false if @options[:always_update]
+        return false if self.class.options[:always_update]
         (env['RACK_ENV'] || @environment).to_s == 'production' && @updated
       end
     end

@@ -7,10 +7,18 @@ module Rack
           if defined?(JSMin)
             JSMin.minify(compiled).strip
           elsif defined?(Packr)
-            Packr.pack(compiled, :shrink_vars => true).strip
+            options = compression_options :shrink_vars => true
+            Packr.pack(compiled, options).strip
           else
             compiled.strip
           end
+        end
+        
+        protected
+        
+        def compression_options(defaults = {})
+          return defaults unless Rack::Pack::Middleware.options
+          defaults.merge Rack::Pack::Middleware.options[:js_compression]
         end
       end
     end

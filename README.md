@@ -4,7 +4,7 @@ Rack::Pack is a piece of Rack Middleware that packages and optionally compresses
 
 ### Why?
 
-I've tried a dozen different asset packaging solutions inlcuding AssetPackager, BundleFu, Jammit,  Sprockets, etc...none of which were quite what I wanted. I didn't need any helpers, controllers, embedded images, rake tasks, or yml config files. I just wanted something to take my assets and package them into one file, and you're looking at it.
+I've tried a dozen different asset packaging solutions inlcuding AssetPackager, BundleFu, Jammit,  Sprockets, etc...none of which were quite what I wanted. I didn't need any helpers, controllers, embedded images, rake tasks, or Yaml config files. I just wanted something to take my assets and package them into one file, and you're looking at it.
 
 ## Installation
     
@@ -24,7 +24,7 @@ or in Rails:
     
 ### Packages
     
-Two files will be packaged out of the box: `javascripts/application.js` & `stylesheets/application.css`. Rack::Pack will look in `vendor/javascripts`, `app/javascripts`, & `./javascripts` for any .js files and `vendor/stylesheets`, `app/stylesheets`, & `./stylesheets` for any .css files. These files will be packaged in the order their found.
+Two files will be packaged out of the box: `javascripts/application.js` & `stylesheets/application.css`. Rack::Pack will look in `vendor/javascripts`, `app/javascripts`, & `./javascripts` for any .js files and `vendor/stylesheets`, `app/stylesheets`, & `./stylesheets` for any .css files. These files will be packaged in the order they're found.
 
 To create your own packages, pass in the name of the output file and the source files as options:
 
@@ -41,7 +41,7 @@ Notice how the output file is relative to the public dir. By default this is jus
     use Rack::Pack, :public_dir => 'html', 'js/main.js' => %w(js/plugins.js js/main.js)
     # Creates a 'html/js/main.js' file
   
-You can also pass a glob string for the source files. This string will be used to search for new files on each request. The downside is the source files will be concatenated in the order they are found.
+You can also pass a glob string for the source files. This string will be used to search for new files on each request. The downside is the source files will be concatenated in the order they're found.
 
     use Rack::Pack, 'assets/scripts.js' => 'app/js/**/*.js'
     
@@ -51,7 +51,7 @@ In fact, this is how the default packages are declared:
       'javascripts/application.js'  => '{vendor,app,.}/javascripts/*.js',
       'stylesheets/application.css' => '{vendor,app,.}/stylesheets/*.css'
       
-Beautiful, isn't it? I don't think you can get simpler than that. No yml config files or rake tasks. You'll set it up once then forget about it completely. Well unless you have to add a new source file and you were explicity setting your source file for a package, but whatever.
+Beautiful, isn't it? I don't think you can get simpler than that. No Yaml config files or rake tasks. You'll set it up once then forget about it completely. Well unless you have to add a new source file and you were explicity setting your source files for a package, but whatever.
       
 ### Compression
       
@@ -72,7 +72,7 @@ or in Rails:
 To pass options to the javascript compressor just use the `:js_compressor` option:
 
     requrie 'packr'
-    use Rack::Pack, :js_compressor => { :shrink_vars => true }
+    use Rack::Pack, :js_compression => { :shrink_vars => true }
     
 By default, packages are only compressed in a production environment. If for some reason you want them to always be compressed, pass the `:always_compress` option:
 

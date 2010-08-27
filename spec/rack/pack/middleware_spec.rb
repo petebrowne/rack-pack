@@ -130,4 +130,18 @@ describe Rack::Pack::Middleware do
       end
     end
   end
+  
+  context 'with javascript compression options' do
+    it 'should pass the options to the javascript compressor' do
+      reveal_const :Packr  do
+        within_construct do |c|
+          c.file 'app/javascripts/file.js', '1'
+          
+          Packr.should_receive(:pack).with('1', :shrink_vars => false).and_return('1')
+          @app = build_app :js_compression => { :shrink_vars => false }
+          @app.call(request)
+        end
+      end
+    end
+  end
 end
