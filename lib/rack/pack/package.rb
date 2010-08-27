@@ -50,6 +50,10 @@ module Rack
         @source_files ||= @from.is_a?(Array) ? @from : Pathname.glob(@from)
       end
       
+      def compress?
+        Pack.production? || Pack.options && Pack.options[:always_compress]
+      end
+      
       protected
       
       def to_pathname(file)

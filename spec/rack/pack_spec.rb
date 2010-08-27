@@ -103,6 +103,20 @@ describe Rack::Pack do
     end
   end
   
+  context 'with :always_compress on' do
+    it 'should compress the packages' do
+      reveal_const :JSMin do
+        within_construct do |c|
+          c.file 'app/javascripts/file.js', '1'
+          
+          JSMin.should_receive(:minify).with('1').and_return('1')
+          @app = build_app :always_compress => true
+          @app.call(request)
+        end
+      end
+    end
+  end
+  
   context 'in a production environment' do
     before do
       Rails = double('rails', :env => double('env', :to_s => 'production'))

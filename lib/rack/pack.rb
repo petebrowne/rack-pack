@@ -8,9 +8,11 @@ module Rack
     autoload :Version,    'rack/pack/version'
     
     DEFAULT_OPTIONS = {
-      :public_dir     => 'public',
-      :always_update  => false,
-      :js_compression => {}
+      :public_dir      => 'public',
+      :always_update   => false,
+      :always_compress => false,
+      :js_compression  => {},
+      :css_compression => {}
     }.freeze
     
     class << self

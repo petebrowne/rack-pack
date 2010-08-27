@@ -149,4 +149,19 @@ describe Rack::Pack::Package do
       end
     end
   end
+  
+  describe '#compress?' do
+    subject { Rack::Pack::Package.new('', '') }
+    it { should_not be_compress }
+    
+    context 'in a production environment' do
+      before { Rack::Pack.stub(:production? => true) }
+      it { should be_compress }
+    end
+    
+    context 'with the :always_compress option' do
+      before { Rack::Pack.stub(:options => double(:options, :[] => true)) }
+      it { should be_compress }
+    end
+  end
 end

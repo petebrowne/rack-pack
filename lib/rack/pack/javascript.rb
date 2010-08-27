@@ -3,15 +3,11 @@ module Rack
     class Javascript < Package
       def compile
         compiled = super
-        compiled = compress(compiled) if should_compress?
+        compiled = compress(compiled) if compress?
         compiled.strip
       end
       
       protected
-      
-      def should_compress?
-        Pack.production?
-      end
       
       def compress(string)
         if defined?(JSMin)
