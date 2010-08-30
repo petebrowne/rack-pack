@@ -23,9 +23,13 @@ module Rack
       end
     
       def add_package(output_file, source_files)
-        public_output_file    = ::File.join(self.options[:public_dir], output_file.to_s)
-        package_class         = Package[output_file]
-        packages[output_file] = package_class.new(public_output_file, source_files)
+        if source_files.nil?
+          packages.delete(output_file)
+        else
+          public_output_file    = ::File.join(self.options[:public_dir], output_file.to_s)
+          package_class         = Package[output_file]
+          packages[output_file] = package_class.new(public_output_file, source_files)
+        end
       end
     end
     
