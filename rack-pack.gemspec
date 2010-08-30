@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = 'me@petebrowne.com'
   s.homepage    = 'http://rubygems.org/gems/rack-pack'
   s.summary     = 'Rack Middleware for packaging assets such as javascripts and stylesheets.'
-  s.description = 'Packages assets such as javascripts and stylesheets using a method inspired by Sass::Plugin. In development mode, the assets are packaged on each request. In production mode, the assets are packaged only one time.'
+  s.description = 'Rack::Pack is a piece of Rack Middleware that packages and optionally compresses assets such as javascripts and stylesheets into single files. In a development environment, assets will be packaged on each request if there have been changes to the source files. In a production environment, assets will only be packaged one time, and only if there have been changes.'
 
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'rack-pack'
