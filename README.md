@@ -4,7 +4,7 @@ Rack::Pack is a piece of Rack Middleware that packages and optionally compresses
 
 ### Why?
 
-I've tried a dozen different asset packaging solutions inlcuding AssetPackager, BundleFu, Jammit,  Sprockets, etc...none of which were quite what I wanted. I didn't need any helpers, controllers, embedded images, rake tasks, or Yaml config files. I just wanted something to take my assets and package them into one file, and you're looking at it.
+I've tried a dozen different asset packaging solutions including AssetPackager, BundleFu, Jammit,  Sprockets, etc...none of which were quite what I wanted. I didn't need any helpers, controllers, embedded images, rake tasks, or Yaml config files. I just wanted something to take my assets and package them into one file, and you're looking at it.
 
 ## Installation
     
@@ -19,6 +19,7 @@ or in Rails:
     
     # Gemfile
     gem 'rack-pack'
+    
     # config/application.rb
     config.middleware.use Rack::Pack
     
@@ -65,22 +66,19 @@ or in Rails:
 
     # Gemfile
     gem 'jsmin'
+    
     # config/application.rb
     config.middleware.use Rack::Pack
     # would use JSMin
 
 To pass options to the javascript compressor just use the `:js_compressor` option:
 
-    requrie 'packr'
+    require 'packr'
     use Rack::Pack, :js_compression => { :shrink_vars => true }
     
 By default, packages are only compressed in a production environment. If for some reason you want them to always be compressed, pass the `:always_compress` option:
 
     use Rack::Pack, :always_compress => true
-    
-## Advanced Usage
-
-TODO
 
 ## Heroku and other read-only filesystems
 
