@@ -117,6 +117,18 @@ describe Rack::Pack do
     end
   end
   
+  context 'with a default package set to nil' do
+    it 'should not pack the files' do
+      within_construct do |c|
+        c.file 'vendor/javascripts/file-1.js', '1'
+        
+        @app = build_app 'javascripts/application.js' => nil
+        @app.call(request)
+        File.exist?('public/javascripts/application.js').should_not be_true
+      end
+    end
+  end
+  
   context 'in a production environment' do
     before do
       Rails = double('rails', :env => double('env', :to_s => 'production'))
