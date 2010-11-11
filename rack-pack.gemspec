@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = 'rack-pack'
 
   s.add_dependency             'rack',             '~> 1.2.1'
-  s.add_development_dependency 'rspec',            '~> 2.0.0.beta.20'
+  s.add_development_dependency 'rspec',            '~> 2.0.0'
   s.add_development_dependency 'activesupport',    '~> 3.0.0'
   s.add_development_dependency 'test-construct',   '~> 1.2.0'
   s.add_development_dependency 'jsmin',            '~> 1.0.1'
