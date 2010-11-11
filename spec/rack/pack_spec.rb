@@ -15,7 +15,7 @@ describe Rack::Pack do
   alias_method :request, :request_for
   
   context 'with default settings' do
-    it 'should pack javascripts' do
+    it 'packs javascripts' do
       within_construct do |c|
         c.file 'vendor/javascripts/file-1.js', '1'
         c.file 'javascripts/file-2.js',        '2'
@@ -27,7 +27,7 @@ describe Rack::Pack do
       end
     end
     
-    it 'should pack stylesheets' do
+    it 'packs stylesheets' do
       within_construct do |c|
         c.file 'vendor/stylesheets/file-1.css',  '1'
         c.file 'stylesheets/file-2.css', '2'
@@ -39,7 +39,7 @@ describe Rack::Pack do
       end
     end
     
-    it 'should not compress the packages' do
+    it 'does not compress the packages' do
       reveal_const :JSMin do
         within_construct do |c|
           c.file 'app/javascripts/file.js', '1'
@@ -52,8 +52,8 @@ describe Rack::Pack do
     end
     
     context 'on next request' do
-      context 'with updates' do
-        it 'should re-pack the package' do
+      context 'when files are updated' do
+        it 're-packs the package' do
           within_construct do |c|
             c.file 'app/stylesheets/file-1.css', '1'
             c.file 'app/stylesheets/file-2.css', '2'
@@ -70,8 +70,8 @@ describe Rack::Pack do
         end
       end
     
-      context 'without updates' do
-        it 'should not re-pack the package' do
+      context 'when files are not updated' do
+        it 'does not re-pack the package' do
           within_construct do |c|
             c.file 'app/stylesheets/file-1.css', '1'
             c.file 'app/stylesheets/file-2.css', '2'
@@ -88,10 +88,46 @@ describe Rack::Pack do
         end
       end
     end
+    
+    context 'when files are added' do
+      it 're-packs the package' do
+        within_construct do |c|
+          c.file 'app/stylesheets/file-1.css', '1'
+          c.file 'app/stylesheets/file-2.css', '2'
+          
+          @app = build_app
+          @app.call(request)
+          File.read('public/stylesheets/application.css').should == '12'
+          
+          sleep 1
+          c.file 'app/stylesheets/file-3.css', '3'
+          @app.call(request)
+          File.read('public/stylesheets/application.css').should == '123'
+        end
+      end
+    end
+    
+    context 'when files are removed' do
+      it 're-packs the package' do
+        within_construct do |c|
+          c.file 'app/stylesheets/file-1.css', '1'
+          c.file 'app/stylesheets/file-2.css', '2'
+          
+          @app = build_app
+          @app.call(request)
+          File.read('public/stylesheets/application.css').should == '12'
+          
+          sleep 1
+          FileUtils.rm 'app/stylesheets/file-2.css'
+          @app.call(request)
+          File.read('public/stylesheets/application.css').should == '1'
+        end
+      end
+    end
   end
   
   context 'with some custom packages' do
-    it 'should pack the files' do
+    it 'packs the files' do
       within_construct do |c|
         c.file 'vendor/javascripts/file-1.js', '1'
         c.file 'app/javascripts/file-2.js',    '2'
@@ -104,7 +140,7 @@ describe Rack::Pack do
   end
   
   context 'with :always_compress on' do
-    it 'should compress the packages' do
+    it 'compresses the packages' do
       reveal_const :JSMin do
         within_construct do |c|
           c.file 'app/javascripts/file.js', '1'
@@ -118,7 +154,7 @@ describe Rack::Pack do
   end
   
   context 'with a default package set to nil' do
-    it 'should not pack the files' do
+    it 'does not pack the files' do
       within_construct do |c|
         c.file 'vendor/javascripts/file-1.js', '1'
         
@@ -138,7 +174,7 @@ describe Rack::Pack do
       Object.send(:remove_const, :Rails)
     end
     
-    it 'should pack files only one time' do
+    it 'packs files only one time' do
       within_construct do |c|
         c.file 'app/javascripts/file.js', '1'
         
@@ -152,8 +188,8 @@ describe Rack::Pack do
       end
     end
     
-    context 'with always_update option as true' do
-      it 'should pack the files on each request' do
+    context 'with :always_update on' do
+      it 'packs the files on each request' do
         within_construct do |c|
           c.file 'app/javascripts/file.js', '1'
           
@@ -169,7 +205,7 @@ describe Rack::Pack do
     end
   
     context 'with javascript compression options' do
-      it 'should pass the options to the javascript compressor' do
+      it 'passes the options to the javascript compressor' do
         reveal_const :Packr do
           within_construct do |c|
             c.file 'app/javascripts/file.js', '1'

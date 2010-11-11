@@ -13,10 +13,10 @@ module Rack
       
       protected
       
-      def compression_options(defaults = {})
-        return defaults unless Pack.options
-        defaults.merge Pack.options[:css_compression]
-      end
+        def compression_options(defaults = {})
+          return defaults unless Pack.options
+          defaults.merge Pack.options[:css_compression]
+        end
     end
   end
 end

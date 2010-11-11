@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Rack::Pack::Stylesheet do
   describe '#compile' do
-    it 'should by default strip the concatenated output' do
+    it 'strips the concatenated output' do
       within_construct do |c|
         c.file 'input-1.css', '   1'
         c.file 'input-2.css', '2   '
@@ -18,7 +18,7 @@ describe Rack::Pack::Stylesheet do
       end
       
       context 'when yui/compressor is required' do
-        it 'should compress using YUI::JavaScriptCompressor' do
+        it 'compresses using YUI::JavaScriptCompressor' do
           reveal_const :YUI do
             within_construct do |c|
               c.file 'input.css', '1'
@@ -33,7 +33,7 @@ describe Rack::Pack::Stylesheet do
       end
       
       context 'when rainpress is required' do
-        it 'should compress using Rainpress' do
+        it 'compresses using Rainpress' do
           reveal_const :Rainpress do
             within_construct do |c|
               c.file 'input.css', '1'
