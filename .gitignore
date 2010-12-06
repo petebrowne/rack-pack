@@ -1,4 +1,3 @@
 .bundle
-.rvmrc
 pkg/*
 *.gem
