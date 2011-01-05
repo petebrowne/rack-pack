@@ -3,7 +3,7 @@ Bundler::GemHelper.install_tasks
 
 require 'rspec/core'
 require 'rspec/core/rake_task'
-Rspec::Core::RakeTask.new
+RSpec::Core::RakeTask.new
 
 desc 'Open an irb session preloaded with this library'
 task :console do
