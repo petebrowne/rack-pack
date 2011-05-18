@@ -2,6 +2,7 @@ lib = File.expand_path('../../lib', __FILE__)
 $:.unshift(lib) unless $:.include?(lib)
 
 require 'rubygems'
+require 'fileutils'
 require 'rspec'
 require 'construct'
 # To get 2.weeks.ago syntax...

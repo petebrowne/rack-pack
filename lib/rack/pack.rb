@@ -76,17 +76,17 @@ module Rack
     
     protected
     
-    def update_packages
-      Pack.packages.each_value do |package|
-        package.update if package.stale?
+      def update_packages
+        Pack.packages.each_value do |package|
+          package.update if package.stale?
+        end
+        @updated = true
       end
-      @updated = true
-    end
-    
-    def skip_update?
-      return false if Pack.options[:always_update]
-      Pack.production? && @updated
-    end
+      
+      def skip_update?
+        return false if Pack.options[:always_update]
+        Pack.production? && @updated
+      end
 
     Package.register :js,  Javascript
     Package.register :css, Stylesheet

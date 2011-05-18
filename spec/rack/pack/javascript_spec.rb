@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Rack::Pack::Javascript do
   describe '#compile' do
-    it 'should by default strip the concatenated output' do
+    it 'strips the concatenated output' do
       within_construct do |c|
         c.file 'input-1.js', '   1'
         c.file 'input-2.js', '2   '
@@ -18,7 +18,7 @@ describe Rack::Pack::Javascript do
       end
       
       context 'when JSMin is required' do
-        it 'should compress using JSMin' do
+        it 'compresses using JSMin' do
           reveal_const :JSMin do
             within_construct do |c|
               c.file 'input.js', 'function(number) { return number + 2; }'
@@ -31,7 +31,7 @@ describe Rack::Pack::Javascript do
       end
       
       context 'when packr is required' do
-        it 'should compress using Packr' do
+        it 'compresses using Packr' do
           reveal_const :Packr do
             within_construct do |c|
               c.file 'input.js', '1'
@@ -44,7 +44,7 @@ describe Rack::Pack::Javascript do
       end
       
       context 'when yui/compressor is required' do
-        it 'should compress using YUI::JavaScriptCompressor' do
+        it 'compresses using YUI::JavaScriptCompressor' do
           reveal_const :YUI do
             within_construct do |c|
               c.file 'input.js', '1'
@@ -59,7 +59,7 @@ describe Rack::Pack::Javascript do
       end
       
       context 'when closure-compiler is required' do
-        it 'should compress using Closure::Compiler' do
+        it 'compresses using Closure::Compiler' do
           reveal_const :Closure do
             within_construct do |c|
               c.file 'input.js', '1'

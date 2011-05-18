@@ -14,35 +14,35 @@ describe Rack::Pack::Package do
   end
   
   describe '.register' do
-    it 'will store the package class for the given extension' do
+    it 'stores the package class for the given extension' do
       Rack::Pack::Package.register :mock, MockPackage
       Rack::Pack::Package.mappings['mock'].should == MockPackage
     end
   end
   
   describe '.mappings' do
-    it 'should by default have a Javascript mapping' do
+    it 'has a Javascript mapping' do
       Rack::Pack::Package.mappings['js'].should == Rack::Pack::Javascript
     end
     
-    it 'should by default have a Stylesheet mapping' do
+    it 'has a Stylesheet mapping' do
       Rack::Pack::Package.mappings['css'].should == Rack::Pack::Stylesheet
     end
   end
   
   describe '.[]' do
-    it 'should find the correct package class for the given file' do
+    it 'finds the package class for the given file' do
       Rack::Pack::Package['some/javascript.js'].should == Rack::Pack::Javascript
     end
     
-    it 'should default to the base Package' do
+    it 'defaults to the base Package' do
       Rack::Pack::Package['missing.ext'].should == Rack::Pack::Package
     end
   end
   
   describe '#file' do
     context 'when initialized with a string' do
-      it 'should convert it to a pathname' do
+      it 'converts it to a pathname' do
         package = Rack::Pack::Package.new('hello', [])
         package.file.should == Pathname.new('hello')
       end
@@ -50,14 +50,14 @@ describe Rack::Pack::Package do
   
   describe '#source_files'
     context 'when initialized with an array of strings' do
-      it 'should convert them to pathnames' do
+      it 'converts them to pathnames' do
         package = Rack::Pack::Package.new('', %w(file-1 file-2))
         package.source_files.should =~ [ Pathname.new('file-1'), Pathname.new('file-2') ]
       end
     end
   
     context 'when initialized with a string' do
-      it 'should treat it as a Dir glob' do
+      it 'treats it as a Dir glob' do
         within_construct do |c|
           c.file 'dir/file-1.js'
           c.file 'dir/file-2.js'
@@ -115,7 +115,7 @@ describe Rack::Pack::Package do
     end
     
     context 'when given a glob string' do
-      it 'should check for new files' do
+      it 'checks for new files' do
         within_construct do |c|
           c.file 'directory/file-1'
           
@@ -133,7 +133,7 @@ describe Rack::Pack::Package do
   end
   
   describe '#update' do
-    it 'should combine the files and write it to the output file' do
+    it 'combines the files and writes it to the output file' do
       within_construct do |c|
         to_file = c.file('packed-file', 'Stale Content')
         package = Rack::Pack::Package.new(

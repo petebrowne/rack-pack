@@ -38,6 +38,7 @@ module Rack
       end
       
       def compile
+        @size = source_files.size
         compiled = source_files.map(&:read).join
         compiled = compress(compiled) if compress?
         compiled.strip
@@ -49,11 +50,11 @@ module Rack
       
       def stale?
         @source_files = nil
-        source_files? && (file_missing? || source_files_newer?)
+        source_files? && (file_missing? || source_files_added_or_removed? || source_files_newer?)
       end
       
       def source_files
-        @source_files ||= @from.is_a?(Array) ? @from : Pathname.glob(@from)
+        @source_files ||= glob? ? Pathname.glob(@from) : @from
       end
       
       def compress?
@@ -62,21 +63,29 @@ module Rack
       
       protected
       
-      def to_pathname(file)
-        file.is_a?(Pathname) ? file : Pathname.new(file)
-      end
-      
-      def source_files?
-        !source_files.empty?
-      end
-      
-      def file_missing?
-        !file.exist?
-      end
-      
-      def source_files_newer?
-        source_files.map(&:mtime).max > file.mtime
-      end
+        def to_pathname(file)
+          file.is_a?(Pathname) ? file : Pathname.new(file)
+        end
+        
+        def glob?
+          @from.is_a?(String)
+        end
+        
+        def source_files?
+          !source_files.empty?
+        end
+        
+        def file_missing?
+          !file.exist?
+        end
+        
+        def source_files_added_or_removed?
+          glob? && source_files.size != @size
+        end
+        
+        def source_files_newer?
+          source_files.map(&:mtime).max > file.mtime
+        end
     end
   end
 end
