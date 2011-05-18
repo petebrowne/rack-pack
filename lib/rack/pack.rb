@@ -51,6 +51,12 @@ module Rack
           packages[output_file] = package_class.new(public_output_file, source_files)
         end
       end
+      
+      def update_packages
+        Pack.packages.each_value do |package|
+          package.update if package.stale?
+        end
+      end
     end
     
     def initialize(app, options = {})
@@ -77,9 +83,7 @@ module Rack
     protected
     
       def update_packages
-        Pack.packages.each_value do |package|
-          package.update if package.stale?
-        end
+        Pack.update_packages
         @updated = true
       end
       

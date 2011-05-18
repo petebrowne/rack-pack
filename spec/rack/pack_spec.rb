@@ -48,6 +48,32 @@ describe Rack::Pack do
     end
   end
   
+  context '.update_packages' do
+    it 'packs javascripts' do
+      within_construct do |c|
+        c.file 'vendor/javascripts/file-1.js', '1'
+        c.file 'javascripts/file-2.js',        '2'
+        c.file 'javascripts/file-3.js',        '3'
+        
+        Rack::Pack.configure
+        Rack::Pack.update_packages
+        File.read('public/javascripts/application.js').should == '123'
+      end
+    end
+    
+    it 'packs stylesheets' do
+      within_construct do |c|
+        c.file 'vendor/stylesheets/file-1.css',  '1'
+        c.file 'stylesheets/file-2.css', '2'
+        c.file 'stylesheets/file-3.css', '3'
+        
+        Rack::Pack.configure
+        Rack::Pack.update_packages
+        File.read('public/stylesheets/application.css').should == '123'
+      end
+    end
+  end
+  
   context 'with default settings' do
     it 'packs javascripts' do
       within_construct do |c|
