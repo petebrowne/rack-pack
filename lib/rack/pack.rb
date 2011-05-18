@@ -8,15 +8,35 @@ module Rack
     autoload :Version,    'rack/pack/version'
     
     DEFAULT_OPTIONS = {
-      :public_dir      => 'public',
-      :always_update   => false,
-      :always_compress => false,
-      :js_compression  => {},
-      :css_compression => {}
+      :public_dir           => 'public',
+      :always_update        => false,
+      :always_compress      => false,
+      :js_compression       => {},
+      :css_compression      => {},
+      :environment          => :development,
+      :add_default_packages => true
     }.freeze
     
     class << self
       attr_accessor :packages, :options, :environment
+      
+      def configure(options = {})
+        self.packages = {}
+        self.options  = DEFAULT_OPTIONS.dup
+      
+        self.options.each_key do |key|
+          self.options[key] = options.delete(key) if options.key?(key)
+        end
+        
+        unless self.options[:add_default_packages] == false
+          add_package 'javascripts/application.js',  '{vendor,app,.}/javascripts/*.js'
+          add_package 'stylesheets/application.css', '{vendor,app,.}/stylesheets/*.css'
+        end
+      
+        options.each do |to_file, from_files|
+          add_package(to_file, from_files)
+        end
+      end
       
       def production?
         self.environment.to_s == 'production'
@@ -35,30 +55,17 @@ module Rack
     
     def initialize(app, options = {})
       @app = app
+      Pack.configure(options)
       
-      Pack.packages    = {}
-      Pack.options     = DEFAULT_OPTIONS.dup
-      Pack.environment = if defined?(RAILS_ENV)
-        RAILS_ENV # Rails 2
+      # Set environment based on Application environment
+      if defined?(RAILS_ENV)
+        Pack.environment = RAILS_ENV # Rails 2
       elsif defined?(Rails) && defined?(Rails.env)
-        Rails.env # Rails 3
+        Pack.environment = Rails.env # Rails 3
       elsif defined?(app.settings) && defined?(app.settings.environment)
-        app.settings.environment # Sinatra
+        Pack.environment = app.settings.environment # Sinatra
       elsif ENV.key?('RACK_ENV')
-        ENV['RACK_ENV']
-      else
-        :development
-      end
-      
-      Pack.options.each_key do |key|
-        Pack.options[key] = options.delete(key) if options.key?(key)
-      end
-      
-      Pack.add_package 'javascripts/application.js',  '{vendor,app,.}/javascripts/*.js'
-      Pack.add_package 'stylesheets/application.css', '{vendor,app,.}/stylesheets/*.css'
-      
-      options.each do |to_file, from_files|
-        Pack.add_package(to_file, from_files)
+        Pack.environment = ENV['RACK_ENV']
       end
     end
     
