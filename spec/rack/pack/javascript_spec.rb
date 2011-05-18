@@ -72,6 +72,21 @@ describe Rack::Pack::Javascript do
           end
         end
       end
+      
+      context 'when uglifier is required' do
+        it 'compresses using Uglifier' do
+          reveal_const :Uglifier do
+            within_construct do |c|
+              c.file 'input.js', '1'
+              
+              compressor = double(:uglifier)
+              compressor.should_receive(:compile).with('1').and_return('1')
+              Uglifier.should_receive(:new).with({}).and_return(compressor)
+              Rack::Pack::Javascript.new('output.js', 'input.js').compile
+            end
+          end
+        end
+      end
     end
   end
 end

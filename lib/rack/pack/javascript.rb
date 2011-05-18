@@ -12,6 +12,8 @@ module Rack
           YUI::JavaScriptCompressor.new(options).compress(source)
         elsif defined?(Closure) and defined?(Closure::Compiler)
           Closure::Compiler.new(compression_options).compile(source)
+        elsif defined?(Uglifier)
+          Uglifier.new(compression_options).compile(source)
         else
           source
         end
