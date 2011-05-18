@@ -14,17 +14,24 @@ describe Rack::Pack do
   end
   alias_method :request, :request_for
   
+  describe '.add_default_packages' do
+    it 'adds default packages' do
+      Rack::Pack.add_default_packages
+      Rack::Pack.packages['javascripts/application.js'].should be_an_instance_of(Rack::Pack::Javascript)
+      Rack::Pack.packages['stylesheets/application.css'].should be_an_instance_of(Rack::Pack::Stylesheet)
+    end
+  end
+  
   describe '.configure' do
     it 'sets the given options' do
       Rack::Pack.configure(:public_dir => '_site', :always_compress => true, :environment => :production)
       Rack::Pack.options.should == {
         :public_dir           => '_site',
+        :add_default_packages => true,
         :always_update        => false,
         :always_compress      => true,
         :js_compression       => {},
-        :css_compression      => {},
-        :environment          => :production,
-        :add_default_packages => true
+        :css_compression      => {}
       }
     end
     

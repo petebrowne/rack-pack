@@ -23,13 +23,19 @@ $hidden_consts = {}
   Object.send :remove_const, const
 end
 
+$default_config = {
+  :packages    => Rack::Pack.packages,
+  :environment => Rack::Pack.environment,
+  :options     => Rack::Pack.options
+}
+
 RSpec.configure do |config|
   config.include Construct::Helpers
   
   config.after do
-    Rack::Pack.packages    = nil
-    Rack::Pack.options     = nil
-    Rack::Pack.environment = nil
+    $default_config.each do |key, value|
+      Rack::Pack.send("#{key}=", value.dup)
+    end
   end
   
   def reveal_const(const)
