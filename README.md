@@ -42,7 +42,7 @@ To create your own packages, pass in the name of the output file and the source 
 ``` ruby
 use Rack::Pack, 'js/main.js' => [
   'vendor/javascripts/jquery.js',
-  'vendor/javascripts/swfobject.js,
+  'vendor/javascripts/swfobject.js',
   'app/javascripts/misc.js',
   'app/javascripts/main.js'
 ]
